@@ -1,24 +1,26 @@
 #include <stdint.h>
+#include "usb_hid_keys.h"
 
 #define KEYBOARD_NUM_OF_COLUMNS 16 // !< Number of columns in the keyboard matrix
-#define KEYBOARD_NUM_OF_ROWS    8  // !< Number of rows in the keyboard matrix
+#define KEYBOARD_NUM_OF_ROWS    9  // !< Number of rows in the keyboard matrix
 
-static const uint8_t row_pin_array[KEYBOARD_NUM_OF_ROWS] = {0,3,21,22,23,25,28,30};
+static const uint8_t row_pin_array[KEYBOARD_NUM_OF_ROWS] = {0,3,21,22,23,25,28,20,30};
 static const uint8_t column_pin_array[KEYBOARD_NUM_OF_COLUMNS] = {1,2,4,5,6,7,8,9,10,11,12,13,14,15,24,29};
 
-static const uint8_t wakeup_button_row_index = 2;			//select row_pin_array[2] = 21
-static const uint8_t wakeup_button_column_index = 1;	//select column_pin_array[1] = 2 
+static const uint8_t wakeup_button_row_index = 6;			//select row_pin_array[2] = 21
+static const uint8_t wakeup_button_column_index = 10;	//select column_pin_array[1] = 2 
 //wakeup button is default_matrix_lookup[2][1] = 0x29 and it's ESC key
 
 /** Table containing the mapping between the key matrix and the HID Usage codes for each key. */
 static const uint8_t default_matrix_lookup[KEYBOARD_NUM_OF_COLUMNS * KEYBOARD_NUM_OF_ROWS] =
 {
-	0x3E, 0x35, 0x3B, 0x22, 0xFF, 0x23, 0x00, 0x00,0x00, 0x00, 0x31, 0x42, 0x2D, 0x00, 0x00, 0x00,
-	0x41, 0x39, 0x3A, 0x05, 0x00, 0x11, 0x00, 0x00,0x00, 0xE6, 0x00, 0x45, 0x2E, 0x4C, 0x00, 0x00,
-	0x40, 0x29, 0x3D, 0x0A, 0x00, 0x0B, 0x00, 0xE3,0x49, 0x00, 0x2A, 0x44, 0x34, 0x46, 0x00, 0x00,
-	0x1A, 0x14, 0x08, 0x15, 0x00, 0x18, 0x0C, 0x00,0x00, 0x00, 0x52, 0x12, 0x13, 0x50, 0xE5, 0x00,
-	0x1F, 0x1E, 0x20, 0x21, 0x00, 0x24, 0x25, 0x00,0x00, 0xE2, 0x51, 0x26, 0x27, 0x4F, 0x00, 0x00,
-	0x16, 0x04, 0x07, 0x09, 0x00, 0x0D, 0x0E, 0x00,0x00, 0x00, 0x28, 0x0F, 0x33, 0x00, 0x00, 0xE4,
-	0x1B, 0x1D, 0x06, 0x19, 0x00, 0x10, 0x36, 0x00,0x00, 0x00, 0x2C, 0x37, 0x38, 0x00, 0xE1, 0x00,
-	0x3F, 0x2B, 0x3C, 0x17, 0x00, 0x1C, 0x30, 0x00,0x00, 0x00, 0x00, 0x43, 0x2F, 0x00, 0x00, 0xE0
+	KEY_NONE,       KEY_NONE,    KEY_KP6,        KEY_KP5,     KEY_KP4,     KEY_LEFTBRACE,  KEY_RIGHTBRACE, KEY_BACKSPACE, KEY_NONE,      KEY_LEFTSHIFT,  KEY_TAB,   KEY_CAPSLOCK,  KEY_F3,   KEY_T,    KEY_Y,    KEY_F7,
+	KEY_NONE,       KEY_HOME,    KEY_PAGEUP,     KEY_INSERT,  KEY_DELETE,  KEY_MINUS,      KEY_EQUAL,      KEY_F9,        KEY_LEFTCTRL,  KEY_NONE,       KEY_GRAVE, KEY_F1,        KEY_F2,   KEY_5,    KEY_6,    KEY_F8,
+	KEY_SYSRQ,      KEY_END,     KEY_PAGEDOWN,   KEY_F12,     KEY_F11,     KEY_0,          KEY_8,          KEY_F10,       KEY_NONE,      KEY_NONE,       KEY_1,     KEY_2,         KEY_3,    KEY_4,    KEY_7,    KEY_9,
+	KEY_SCROLLLOCK, KEY_KPPLUS,  KEY_KP9,        KEY_KP8,     KEY_KP7,     KEY_P,          KEY_I,          KEY_NONE,      KEY_NONE,      KEY_NONE,       KEY_Q,     KEY_W,         KEY_E,    KEY_R,    KEY_U,    KEY_O,
+	KEY_NONE,       KEY_KPENTER, KEY_KP3,        KEY_KP2,     KEY_KP1,     KEY_SEMICOLON,  KEY_K,          KEY_HASHTILDE, KEY_NONE,      KEY_NONE,       KEY_A,     KEY_S,         KEY_D,    KEY_F,    KEY_J,    KEY_L,
+	KEY_RIGHTALT,   KEY_LEFT,    KEY_KPMINUS,    KEY_RIGHT,   KEY_DOWN,    KEY_SLASH,      KEY_NONE,       KEY_SPACE,     KEY_NONE,      KEY_NONE,       KEY_NONE,  KEY_NONE,      KEY_NONE, KEY_B,    KEY_N,    KEY_NONE,
+	KEY_LEFTALT,    KEY_UP,      KEY_KPDOT,      KEY_KP0,     KEY_NONE,    KEY_APOSTROPHE, KEY_F6,         KEY_F5,        KEY_NONE,      KEY_NONE,       KEY_ESC,   KEY_102ND,     KEY_F4,   KEY_G,    KEY_H,    KEY_NONE,
+	KEY_NONE,       KEY_PAUSE,   KEY_KPASTERISK, KEY_KPSLASH, KEY_NUMLOCK, KEY_NONE,       KEY_COMMA,      KEY_ENTER,     KEY_RIGHTCTRL, KEY_RIGHTSHIFT, KEY_Z,     KEY_X,         KEY_C,    KEY_V,    KEY_M,    KEY_DOT,
+	KEY_NONE,       KEY_NONE,    KEY_NONE,       KEY_NONE,    KEY_NONE,    KEY_NONE,       KEY_NONE,       KEY_NONE,      KEY_NONE,      KEY_NONE,       KEY_NONE,  KEY_NONE,      KEY_NONE, KEY_NONE, KEY_NONE, KEY_NONE
 };
